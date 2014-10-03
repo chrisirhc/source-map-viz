@@ -18,13 +18,15 @@
         </style>
     </head>
     <body ng-app="source-map-viz" ng-controller="MainAppCtrl">
-        <div class="container-fluid">
+        <div class="container">
+            <h1>Source Map Viz</h1>
             <form role="form" class="row">
                 <div class="form-group">
+                    <label for="">Pick a Source Map File</label>
                     <input type="file" fileread="model.rawSourceMap">
-
                 </div>
                 <div class="form-group">
+                    <label for="">Source File to View</label>
                     <select class="form-control"
                         ng-options="source for source in sources"
                         ng-model="model.selectedSource">
@@ -33,15 +35,17 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-6">
+                        <label for="">Line</label>
                         <input class="form-control" type="number" ng-model="model.line">
                     </div>
                     <div class="col-sm-6">
+                        <label for="">Col</label>
                         <input class="form-control" type="number" ng-model="model.col">
                     </div>
                 </div>
             </form>
 
-            <div class="row">
+            <div class="row" style="margin-top: 1em;">
                 <textarea code-mirror value="sourceContent" class="form-control"></textarea>
             </div>
         </div>
