@@ -19,7 +19,7 @@
     </head>
     <body ng-app="source-map-viz" ng-controller="MainAppCtrl">
         <div class="container-fluid">
-            <form role="form">
+            <form role="form" class="row">
                 <div class="form-group">
                     <input type="file" fileread="model.rawSourceMap">
 
@@ -32,12 +32,18 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="number" ng-model="model.line">
-                    <input class="form-control" type="number" ng-model="model.col">
+                    <div class="col-sm-6">
+                        <input class="form-control" type="number" ng-model="model.line">
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control" type="number" ng-model="model.col">
+                    </div>
                 </div>
             </form>
-            <br>
-            <textarea code-mirror value="sourceContent" class="form-control"></textarea>
+
+            <div class="row">
+                <textarea code-mirror value="sourceContent" class="form-control"></textarea>
+            </div>
         </div>
 
         <script src="angular.js"></script>
