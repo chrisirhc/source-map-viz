@@ -3,21 +3,24 @@ angular.module('source-map-viz', [])
 
 .controller('MainAppCtrl', function ($scope) {
 
-  var rawSourceMap = {"version":3,"file":"demo.min.js","sources":["../src/demo.js"],"names":["iAmAFunction","i","console","log"],"mappings":";;AAEA,QAASA,iBAFT,GAAIC,GAAI,CAMRC,SAAQC,IAAI","sourcesContent":["var i = 1;\n\nfunction iAmAFunction() {\n    var cool = 2;\n}\n\nconsole.log('hello world');"]};
-
   var SourceMapConsumer = sourceMap.SourceMapConsumer;
 
-  var smc = new SourceMapConsumer(rawSourceMap);
-
-  window.smc = smc;
+  var smc;
 
   $scope.model = {
+    rawSourceMap: null,
     selectedSource : null,
     line: null,
     col: null,
   };
 
-  $scope.sources = smc.sources;
+  $scope.$watch('model.rawSourceMap', function (value) {
+    if (value) {
+      var rawSourceMap = angular.fromJson(value);
+      smc = new SourceMapConsumer(rawSourceMap);
+      $scope.sources = smc.sources;
+    }
+  });
 
   $scope.$watch('model.selectedSource', function (value) {
     if (!value) {
@@ -95,6 +98,25 @@ angular.module('source-map-viz', [])
     }
   };
 })
+
+.directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                    });
+                };
+                reader.readAsText(changeEvent.target.files[0]);
+            });
+        }
+    };
+}]);
 
 
 ;
