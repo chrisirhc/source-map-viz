@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bootstrap-assets/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="bootstrap-assets/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="codemirror-assets/codemirror.css" />
+        <link rel="stylesheet" href="codemirror-assets/tomorrow-night-eighties.css" />
+        <style>
+            .test-highlight {
+                border: 1px solid gray;
+                background: rgba(255,0,0,0.2);
+            }
+
+            .test-highlight:hover {
+                background: blue;
+            }
+        </style>
+    </head>
+    <body ng-app="source-map-viz" ng-controller="MainAppCtrl">
+        <div class="container">
+            <h1>Source Map Viz</h1>
+            <form role="form" class="row">
+                <div class="form-group">
+                    <label for="">Pick a Source Map File</label>
+                    <input type="file" fileread="model.rawSourceMap">
+                </div>
+                <div class="form-group">
+                    <label for="">Source File to View</label>
+                    <select class="form-control"
+                        ng-options="source for source in sources"
+                        ng-model="model.selectedSource">
+                        <option value="">Select a source</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <label for="">Line</label>
+                        <input class="form-control" type="number" ng-model="model.line">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="">Col</label>
+                        <input class="form-control" type="number" ng-model="model.col">
+                    </div>
+                </div>
+            </form>
+
+            <div class="row" style="margin-top: 1em;">
+                <div class="col-sm-12">
+                    <textarea code-mirror value="sourceContent" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <script src="angular.js"></script>
+        <script src="source-map.js"></script>
+        <script src="app.js"></script>
+        <script src="codemirror-assets/codemirror.js"></script>
+        <script src="codemirror-assets/javascript.js"></script>
+    </body>
+</html>

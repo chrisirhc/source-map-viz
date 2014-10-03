@@ -1,0 +1,10 @@
+{
+  "browser": true,
+  "eqeqeq": false,
+  "eqnull": true,
+  "smarttabs": true,
+  "undef": true,
+  "unused": true,
+  "globals": {
+  }
+}
