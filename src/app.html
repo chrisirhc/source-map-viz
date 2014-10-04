@@ -25,22 +25,28 @@
                     <label for="">Pick a Source Map File</label>
                     <input type="file" fileread="model.rawSourceMap">
                 </div>
-                <div class="form-group">
-                    <label for="">Source File to View</label>
-                    <select class="form-control"
-                        ng-options="source for source in sources"
-                        ng-model="model.selectedSource">
-                        <option value="">Select a source</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <label for="">Line</label>
-                        <input class="form-control" type="number" ng-model="model.line">
+                <div ng-if="model.rawSourceMap">
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <label for="">Generated Line:Col (e.g. <code>123:456</code>)</label>
+                            <input class="form-control" type="text" ng-model="model.lineCol">
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="">Generated Line</label>
+                            <input class="form-control" type="number" ng-model="model.line" min="1">
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="">Generated Col</label>
+                            <input class="form-control" type="number" ng-model="model.col" min="1">
+                        </div>
                     </div>
-                    <div class="col-sm-6">
-                        <label for="">Col</label>
-                        <input class="form-control" type="number" ng-model="model.col">
+                    <div class="form-group">
+                        <label for="">Source File to View</label>
+                        <select class="form-control"
+                            ng-options="source for source in sources"
+                            ng-model="model.selectedSource">
+                            <option value="">Select a source</option>
+                        </select>
                     </div>
                 </div>
             </form>

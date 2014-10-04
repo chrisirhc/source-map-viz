@@ -10,6 +10,7 @@ angular.module('source-map-viz', [])
   $scope.model = {
     rawSourceMap: null,
     selectedSource : null,
+    lineCol: '',
     line: null,
     col: null,
   };
@@ -39,14 +40,28 @@ angular.module('source-map-viz', [])
 
   });
 
+  $scope.$watch('model.lineCol', function (value) {
+    if (value && angular.isString(value)) {
+      var valueSplit = value.split(':');
+      $scope.model.line = +valueSplit[0];
+      $scope.model.col = +valueSplit[1];
+    }
+  });
+
   $scope.$watchGroup(['model.line', 'model.col'], function (values) {
     var line = values[0];
     var col = values[1];
     if (line >= 1 && col >= 1) {
-      console.log(smc.originalPositionFor({
+      $scope.model.lineCol = line + ':' + col;
+
+      var orgPos = smc.originalPositionFor({
         line: line,
         column: col,
-      }));
+      });
+
+      if (orgPos.source) {
+        $scope.model.selectedSource = orgPos.source;
+      }
     }
   });
 
