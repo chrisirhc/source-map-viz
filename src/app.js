@@ -106,14 +106,19 @@ angular.module('source-map-viz', [])
 
         function perMapping(m, i) {
           var thisM = prevM;
-          if (prevM) {
+          if (thisM) {
 
             var endPos;
 
-            if (!m || prevM.originalLine != m.originalLine) {
+            if (thisM.name) {
               endPos = {
-                line: prevM.originalLine - 1,
-                ch: editor.getLine(prevM.originalLine - 1).length,
+                line: thisM.originalLine - 1,
+                ch: thisM.originalColumn + thisM.name.length,
+              };
+            } else if (!m || thisM.originalLine != m.originalLine) {
+              endPos = {
+                line: thisM.originalLine - 1,
+                ch: editor.getLine(thisM.originalLine - 1).length,
               };
             } else {
               endPos = {
