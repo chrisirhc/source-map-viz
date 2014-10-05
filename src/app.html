@@ -7,13 +7,25 @@
         <link rel="stylesheet" href="codemirror-assets/codemirror.css" />
         <link rel="stylesheet" href="codemirror-assets/tomorrow-night-eighties.css" />
         <style>
-            .test-highlight {
+            .mapping-mark {
                 border: 1px solid gray;
-                background: rgba(255,0,0,0.2);
+                border-width: 1px 0;
             }
 
-            .test-highlight:hover {
-                background: blue;
+            .mapping-mark-start {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+                border-left-width: 1px;
+            }
+
+            .mapping-mark-end {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                border-right-width: 1px;
+            }
+
+            .mapping-mark:hover {
+                background: rgba(255,255,255,0.2);
             }
         </style>
     </head>
@@ -51,6 +63,16 @@
                 </div>
             </form>
 
+            <div class="row">
+                <ol class="list-inline">
+                    <li ng-repeat="sourceMapping in sourceMappings">
+                        {{ sourceMapping.generatedLine }}:{{ sourceMapping.generatedColumn}}
+                        &rarr;
+                        {{ sourceMapping.originalLine }}:{{ sourceMapping.originalColumn }}
+                    </li>
+                </ol>
+            </div>
+
             <div class="row" style="margin-top: 1em;">
                 <div class="col-sm-12">
                     <textarea code-mirror value="sourceContent" class="form-control"></textarea>
@@ -58,6 +80,7 @@
             </div>
         </div>
 
+        <script src="jquery-2.1.1.min.js"></script>
         <script src="angular.js"></script>
         <script src="source-map.js"></script>
         <script src="app.js"></script>

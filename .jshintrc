@@ -1,4 +1,5 @@
 {
+  "jquery": true,
   "browser": true,
   "eqeqeq": false,
   "eqnull": true,

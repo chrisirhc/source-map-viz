@@ -1,4 +1,4 @@
-/* globals sourceMap: false, angular: false, CodeMirror: falseGG */
+/* globals sourceMap: false, angular: false, CodeMirror: false */
 angular.module('source-map-viz', [])
 
 .controller('MainAppCtrl', function ($scope) {
@@ -26,6 +26,7 @@ angular.module('source-map-viz', [])
   $scope.$watch('model.selectedSource', function (value) {
     if (!value) {
       $scope.sourceContent = null;
+      $scope.sourceMappings = null;
       return;
     }
 
@@ -69,6 +70,9 @@ angular.module('source-map-viz', [])
 
 
 .directive('codeMirror', function () {
+
+  var MAPPING_IDX_PREFIX = 'mapping-idx-';
+
   return {
     // scope: {
     //   value: '=',
@@ -82,36 +86,80 @@ angular.module('source-map-viz', [])
         readOnly: true,
       });
 
+      element.parent().on('mouseover', '.mapping-mark', mouseOverHighlight);
+
+      function mouseOverHighlight(e) {
+        var mappingIdx = getMappingIdx(this);
+        console.log(mappingIdx);
+      }
+
       scope.$watch('sourceContent', function (value) {
         editor.setValue(value || '');
 
         if (value) {
           // loop through sourceContent and mark text
           var prevM;
-          scope.sourceMappings.forEach(function (m) {
-            var thisM = prevM;
-            if (prevM) {
-              editor.markText({
-                line: thisM.originalLine,
-                ch: thisM.originalColumn,
-              }, {
-                line: m.originalLine,
-                ch: m.originalColumn,
-              }, {
-                className: 'test-highlight',
-              })
-              .on('beforeCursorEnter', function () {
-                scope.model.line = thisM.generatedLine;
-                scope.model.col = thisM.generatedColumn;
-                scope.$apply();
-              });
+          scope.sourceMappings.forEach(perMapping);
+          // close end marker of last mapping.
+          perMapping(null, scope.sourceMappings.length);
+        }
+
+        function perMapping(m, i) {
+          var thisM = prevM;
+          if (prevM) {
+
+            var endPos;
+
+            if (!m || prevM.originalLine != m.originalLine) {
+              endPos = {
+                line: prevM.originalLine - 1,
+                ch: editor.getLine(prevM.originalLine - 1).length,
+              };
+            } else {
+              endPos = {
+                line: m.originalLine - 1,
+                ch: m.originalColumn - 1,
+              };
             }
-            prevM = m;
-          });
+
+            var marker = editor.markText({
+              line: thisM.originalLine - 1,
+              ch: thisM.originalColumn,
+            }, endPos, {
+              startStyle: 'mapping-mark-start',
+              endStyle: 'mapping-mark-end',
+              className: 'mapping-mark' +
+                getMappingIdxClass(i - 1),
+            });
+
+            marker
+            .on('beforeCursorEnter', function () {
+              scope.model.line = thisM.generatedLine;
+              scope.model.col = thisM.generatedColumn;
+              scope.$apply();
+            });
+          }
+          prevM = m;
         }
       });
     }
   };
+
+  function getMappingIdx(domEl) {
+    var mappingIdx;
+    $.each(domEl.classList, function (i, className) {
+      if (className.indexOf(MAPPING_IDX_PREFIX) === 0) {
+        mappingIdx = className.substr(MAPPING_IDX_PREFIX.length);
+        return false;
+      }
+    });
+
+    return mappingIdx;
+  }
+
+  function getMappingIdxClass(i) {
+    return ' ' + MAPPING_IDX_PREFIX + i;
+  }
 })
 
 .directive("fileread", [function () {
