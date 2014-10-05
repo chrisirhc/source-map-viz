@@ -91,6 +91,8 @@ angular.module('source-map-viz', [])
         readOnly: true,
       });
 
+      var mappingMarkers = [];
+
       element.parent().on('mouseover', '.mapping-mark', mouseOverHighlight);
 
       function mouseOverHighlight() {
@@ -101,6 +103,7 @@ angular.module('source-map-viz', [])
       }
 
       scope.$watch('sourceContent', function (value) {
+        mappingMarkers = [];
         editor.setValue(value || '');
 
         if (value) {
@@ -150,8 +153,18 @@ angular.module('source-map-viz', [])
               scope.model.col = thisM.generatedColumn;
               scope.$apply();
             });
+            mappingMarkers.push(marker);
           }
           prevM = m;
+        }
+      });
+
+      scope.$watch('model.selectedSourceMapping', function (m) {
+        if (m) {
+          var idx = scope.sourceMappings.indexOf(m);
+          var mappingMarker = mappingMarkers[idx];
+          var markerPos = mappingMarker.find();
+          editor.setSelection(markerPos.to, markerPos.from);
         }
       });
     }

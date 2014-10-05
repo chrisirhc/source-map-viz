@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="codemirror-assets/tomorrow-night-eighties.css" />
         <style>
             .mapping-mark {
-                border: 1px solid gray;
+                border: 1px solid rgba(100,100,100,0.5);
                 border-width: 1px 0;
             }
 
@@ -22,10 +22,6 @@
                 border-top-right-radius: 5px;
                 border-bottom-right-radius: 5px;
                 border-right-width: 1px;
-            }
-
-            .mapping-mark:hover {
-                background: rgba(255,255,255,0.2);
             }
 
             .mapping-item-list {
@@ -76,6 +72,7 @@
                 <ol class="mapping-item-list list-inline">
                     <li class="mapping-item"
                         ng-repeat="sourceMapping in sourceMappings"
+                        ng-mouseover="model.selectedSourceMapping = sourceMapping"
                         ng-class="{selected: sourceMapping == model.selectedSourceMapping}">
                         {{ sourceMapping.generatedLine }}:{{ sourceMapping.generatedColumn}}
                         &rarr;
