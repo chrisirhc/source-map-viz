@@ -1,4 +1,6 @@
+/* jshint globalstrict: true */
 /* globals sourceMap: false, angular: false, CodeMirror: false */
+'use strict';
 angular.module('source-map-viz', [])
 
 .controller('MainAppCtrl', function ($scope) {
@@ -10,6 +12,7 @@ angular.module('source-map-viz', [])
   $scope.model = {
     rawSourceMap: null,
     selectedSource : null,
+    selectedSourceMapping : null,
     lineCol: '',
     line: null,
     col: null,
@@ -24,6 +27,8 @@ angular.module('source-map-viz', [])
   });
 
   $scope.$watch('model.selectedSource', function (value) {
+    $scope.model.selectedSourceMapping = null;
+
     if (!value) {
       $scope.sourceContent = null;
       $scope.sourceMappings = null;
@@ -88,9 +93,11 @@ angular.module('source-map-viz', [])
 
       element.parent().on('mouseover', '.mapping-mark', mouseOverHighlight);
 
-      function mouseOverHighlight(e) {
+      function mouseOverHighlight() {
+        /* jshint validthis:true */
         var mappingIdx = getMappingIdx(this);
-        console.log(mappingIdx);
+        scope.model.selectedSourceMapping = scope.sourceMappings[mappingIdx];
+        scope.$apply();
       }
 
       scope.$watch('sourceContent', function (value) {
